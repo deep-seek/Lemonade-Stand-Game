@@ -11,10 +11,10 @@ void game() {
   int day_cycle;
   float balance;
   int day = 1;
-  int lemon_stock;
+  int lemon_stock = 0;
   int lemon_age = 0;
   int old_lemon_stock;
-  int glass_stock;
+  int glass_stock = 0;
   int stock;
   float price;
   int tip;
@@ -40,8 +40,6 @@ void game() {
     }
 
     // Balance and stock
-    lemon_stock = 0;
-    glass_stock = 0;
     balance = 100;
 
     printf("Your balance is %.2f.\n", balance);
@@ -129,6 +127,8 @@ void game() {
         printf("Make lemonades!");
         continue;
       }
+      lemon_stock -= lemonades * 2;
+      glass_stock -= lemonades;
       break;
     }
     printf("Nice, now you've %d lemonades.\n", stock);
