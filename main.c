@@ -13,24 +13,24 @@ void game() {
   int day = 1;
   int lemon_stock = 0;
   int lemon_age = 0;
-  int old_lemon_stock;
+  int old_lemon_stock = 0;
   int glass_stock = 0;
-  int stock;
-  float price;
-  int tip;
+  int stock = 0;
+  float price = 0;
+  int tip = 0;
   int tip_chance;
   int base_customers = 12;
 
   printf("the\nLemonade Stand\nGame\n\n");
   printf("Who are you: ");
   scanf("%s", player);
-  printf("Starting Game...\n\n");
+  printf("Starting Game...\n");
   day_cycle = 1;
 
   while (day_cycle) {
     weather = rand() % 7;
     // Important data of day
-    printf("%s - Day %d\n", player, day);
+    printf("\n%s - Day %d\n", player, day);
     if (weather == 1) {
       printf("It is cloudy day, less customers will come...\n\n");
     } else if (weather == 3) {
@@ -49,94 +49,120 @@ void game() {
     // Buy lemons and glasses
     printf("\nWould you like to buy more?\n(Y/N): ");
     char willBuy;
-    scanf(" %c", &willBuy);
 
-    while (willBuy == 'y') {
-      int lemon_buy, glass_buy;
-      float lemon_price = 0.5;
-      float glass_price = 0.5;
-
-      printf("Buy lemons, cost %.2f$/u: ", lemon_price);
-      scanf(" %d", &lemon_buy);
-
-      if (lemon_buy > 0) {
-        float cost = lemon_buy * lemon_price;
-        if (balance < cost) {
-          printf("You don't have enough money to buy %d lemons!\n", lemon_buy);
-          continue;
-        }
-        balance -= cost;
-        printf("Successfully buyed %d lemons.\nYour balance now is %.2f.\n", lemon_buy, balance);
-        lemon_stock += lemon_buy;
-      } else {
-        printf("Buy lemons!\n");
+    while (1) {
+      scanf(" %c", &willBuy);
+      if (willBuy != 'y' && willBuy != 'n') {
+        printf("\nIncorrect input.\nWould you like to buy more?\n(Y/N): ");
+        while (getchar() != '\n');
         continue;
       }
 
-      printf("\nBuy glasses, cost %.2f$/u: ", glass_price);
-      scanf(" %d", &glass_buy);
+      while (willBuy == 'y') {
+        int lemon_buy, glass_buy;
+        float lemon_price = 0.5;
+        float glass_price = 0.5;
 
-      if (glass_buy > 0) {
-        float cost = glass_buy * glass_price;
-        if (balance < cost) {
-          printf("You don't have enough money to buy %d glasses!\n", glass_buy);
+        printf("Buy lemons, cost %.2f$/u: ", lemon_price);
+        scanf(" %d", &lemon_buy);
+
+        if (lemon_buy > 0) {
+          float cost = lemon_buy * lemon_price;
+          if (balance < cost) {
+            printf("You don't have enough money to buy %d lemons!\n", lemon_buy);
+            continue;
+          }
+          balance -= cost;
+          printf("Successfully buyed %d lemons.\nYour balance now is %.2f.\n", lemon_buy, balance);
+          lemon_stock += lemon_buy;
+        } else {
+          printf("Buy lemons!\n");
           continue;
         }
-        balance -= cost;
-        printf("Successfully buyed %d glasses.\nYour balance now is %.2f.\n", glass_buy, balance);
-        glass_stock += glass_buy;
-      } else {
-        printf("Buy glasses!\n");
-        continue;
+
+        printf("\nBuy glasses, cost %.2f$/u: ", glass_price);
+        scanf(" %d", &glass_buy);
+
+        if (glass_buy > 0) {
+          float cost = glass_buy * glass_price;
+          if (balance < cost) {
+            printf("You don't have enough money to buy %d glasses!\n", glass_buy);
+            continue;
+          }
+          balance -= cost;
+          printf("Successfully buyed %d glasses.\nYour balance now is %.2f.\n", glass_buy, balance);
+          glass_stock += glass_buy;
+        } else {
+          printf("Buy glasses!\n");
+          continue;
+        }
+        break;
       }
       break;
     }
     printf("\nNow you've %d lemons and %d glasses.\n", lemon_stock, glass_stock);
 
     // Make limonade & Limonade price
-    stock = 0;
     printf("\nYou've %d lemonades.\nWould you like to make more?\n(Y/N): ", stock);
     char makeLemonade;
-    scanf(" %c", &makeLemonade);
 
-    while (makeLemonade == 'y') {
-      int needLemon = 2;
-      printf(
-        "\nYou need %d lemons in a glass per lemonade\nHow many lemonades would you make?: ",
-        needLemon
-      );
-      int lemonades;
-      scanf("%d", &lemonades);
-      if (lemonades > 0) {
-        if ((lemonades * 2) > lemon_stock) {
-          printf(
-            "\nYou're out of lemons to make %d lemonades.\nYou've %d lemons.\n",
-            lemonades, lemon_stock
-          );
-          continue;
-        }
-        if (lemonades > glass_stock) {
-          printf("\nYou're out of glasses to make %d lemonades.\nYou've %d glasses.\n",
-            lemonades, glass_stock
-          );
-          continue;
-        }
+    while (1) {
+      scanf(" %c", &makeLemonade);
 
-        stock += lemonades;
-      } else {
-        printf("Make lemonades!");
+      if (makeLemonade != 'y' && makeLemonade != 'n') {
+        printf("\nIncorrect input.\nWould you like to make more?\n(Y/N): ");
         continue;
       }
-      lemon_stock -= lemonades * 2;
-      glass_stock -= lemonades;
+
+      while (makeLemonade == 'y') {
+        int needLemon = 2;
+        printf(
+          "\nYou need %d lemons in a glass per lemonade\nHow many lemonades would you make?: ",
+          needLemon
+        );
+        int lemonades;
+
+        if (scanf(" %d", &lemonades) != 1) {
+          printf("\nIncorrect input.\nInput a number!\n");
+          while (getchar() != '\n');
+          continue;
+        }
+        if (lemonades > 0) {
+          if ((lemonades * needLemon) > lemon_stock) {
+            printf(
+              "\nYou're out of lemons to make %d lemonades.\nYou've %d lemons.\n",
+              lemonades, lemon_stock
+            );
+            continue;
+          }
+          if (lemonades > glass_stock) {
+            printf("\nYou're out of glasses to make %d lemonades.\nYou've %d glasses.\n",
+              lemonades, glass_stock
+            );
+            continue;
+          }
+
+          stock += lemonades;
+        } else {
+          printf("Make lemonades!");
+          continue;
+        }
+        lemon_stock -= lemonades * 2;
+        glass_stock -= lemonades;
+        break;
+      }
       break;
     }
     printf("Nice, now you've %d lemonades.\n", stock);
 
-    price = 0;
     while (price < 1) {
       printf("\nBefore start selling, set price to your lemonades: ");
-      scanf(" %f", &price);
+
+      if (scanf(" %f", &price) != 1) {
+        printf("\nIncorrect input.\nInput a number!\n");
+        while (getchar() != '\n');
+        continue;
+      }
 
       if (price < 1) {
         printf("\nAre you sure you want giveaway limonades?\n");
@@ -204,17 +230,25 @@ void game() {
     // Cleanup
     printf("\nProceed to cleanup of stand?\n(Y/N): ");
     char cleanup;
-    scanf(" %c", &cleanup);
 
-    while (cleanup == 'y') {
-      printf("There are %d lemons, tomorrow they will be 1 day old.\n", lemon_stock);
-      printf("There are %d glasses, wash them now and save.\n", glass_stock);
-      if (lemon_age < 1) {
-        printf("No need of cleanup lemons.\n");
-      } else {
-        printf("\nStarting cleanup of %d lemons...\n", old_lemon_stock);
-        old_lemon_stock = 0;
-        printf("Cleaned up old lemons!\n");
+    while (1) {
+      scanf(" %c", &cleanup);
+      if (cleanup != 'y' && cleanup != 'n') {
+        printf("\nIncorrect input.\nProceed to cleanup of stand?\n(Y/N): ");
+        continue;
+      }
+
+      while (cleanup == 'y') {
+        printf("There are %d lemons, tomorrow they will be 1 day old.\n", lemon_stock);
+        printf("There are %d glasses, wash them now and save.\n", glass_stock);
+        if (lemon_age < 1) {
+          printf("No need of cleanup lemons.\n");
+        } else {
+          printf("\nStarting cleanup of %d lemons...\n", old_lemon_stock);
+          old_lemon_stock = 0;
+          printf("Cleaned up old lemons!\n");
+        }
+        break;
       }
       break;
     }
@@ -227,7 +261,6 @@ void game() {
 
       if (nextDay != 'y' && nextDay != 'n') {
         printf("\nIncorrect input.\nProceed to next day?\n(Y/N): ");
-        while (getchar() != '\n');
         continue;
       }
       break;
